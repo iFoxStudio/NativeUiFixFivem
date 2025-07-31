@@ -2919,12 +2919,12 @@ function UIMenu:ProcessControl()
     if not self.LeftPressed then
         if self.Controls.Left.Enabled and (IsDisabledControlPressed(0, 174) or IsDisabledControlPressed(1, 174) or IsDisabledControlPressed(2, 174)) then
             Citizen.CreateThread(function()
-                self.LeftPressed = true
                 self:GoLeft()
                 Citizen.Wait(175)
                 while self.Controls.Left.Enabled and (IsDisabledControlPressed(0, 174) or IsDisabledControlPressed(1, 174) or IsDisabledControlPressed(2, 174)) do
                     self:GoLeft()
                     Citizen.Wait(125)
+                    self.LeftPressed = false
                 end
                 self.LeftPressed = false
             end)
@@ -2934,12 +2934,12 @@ function UIMenu:ProcessControl()
     if not self.RightPressed then
         if self.Controls.Right.Enabled and (IsDisabledControlPressed(0, 175) or IsDisabledControlPressed(1, 175) or IsDisabledControlPressed(2, 175)) then
             Citizen.CreateThread(function()
-                self.RightPressed = true
                 self:GoRight()
                 Citizen.Wait(175)
                 while self.Controls.Right.Enabled and (IsDisabledControlPressed(0, 175) or IsDisabledControlPressed(1, 175) or IsDisabledControlPressed(2, 175)) do
                     self:GoRight()
                     Citizen.Wait(125)
+                    self.RightPressed = false
                 end
                 self.RightPressed = false
             end)
@@ -3036,6 +3036,8 @@ function UIMenu:GoDown()
 end
 
 function UIMenu:GoLeft()
+    if self.LeftPressed then return end
+    self.LeftPressed = true
     local type, subtype = self.Items[self:CurrentSelection()]()
     if subtype ~= "UIMenuListItem" and subtype ~= "UIMenuSliderItem" and subtype ~= "UIMenuProgressItem" then
         return
@@ -3068,6 +3070,8 @@ function UIMenu:GoLeft()
 end
 
 function UIMenu:GoRight()
+    if self.RightPressed then return end
+    self.RightPressed = true
     local type, subtype = self.Items[self:CurrentSelection()]()
     if subtype ~= "UIMenuListItem" and subtype ~= "UIMenuSliderItem" and subtype ~= "UIMenuProgressItem" then
         return
